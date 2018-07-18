@@ -3,7 +3,7 @@ package com.example.surface4pro.bakingtime.data;
 
 public class Ingredient {
 
-    private Integer quantity;
+    private Float quantity;
     private String measure;
     private String ingredient;
 
@@ -20,18 +20,18 @@ public class Ingredient {
      * @param ingredient Name of the Ingredient.
      * @param quantity   Quantity of the Ingredient.
      */
-    public Ingredient(Integer quantity, String measure, String ingredient) {
+    public Ingredient(Float quantity, String measure, String ingredient) {
         super();
         this.quantity = quantity;
         this.measure = measure;
         this.ingredient = ingredient;
     }
 
-    public Integer getQuantity() {
+    public Float getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(Integer quantity) {
+    public void setQuantity(Float quantity) {
         this.quantity = quantity;
     }
 
