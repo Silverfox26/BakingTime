@@ -1,7 +1,11 @@
 package com.example.surface4pro.bakingtime;
 
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
 import com.android.volley.Request;
@@ -10,13 +14,16 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.surface4pro.bakingtime.adapters.RecipeAdapter;
 import com.example.surface4pro.bakingtime.data.Recipe;
+import com.example.surface4pro.bakingtime.databinding.ActivityMainBinding;
 import com.google.gson.Gson;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements RecipeAdapter.RecipeAdapterOnClickHandler {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -25,12 +32,16 @@ public class MainActivity extends AppCompatActivity {
     private RequestQueue requestQueue;
     private Gson gson;
 
-    private List<Recipe> recipes;
+    private RecyclerView mRecyclerView;
+    private RecipeAdapter mAdapter;
+    private ActivityMainBinding mBinding;
+
+    private List<Recipe> recipes = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
 
         // Instantiate new RequestQueue that will handle running the network request in a background thread
         requestQueue = Volley.newRequestQueue(this);
@@ -38,8 +49,23 @@ public class MainActivity extends AppCompatActivity {
         // Instantiate new Gson instance
         gson = new Gson();
 
+        // Initialize the RecyclerView
+        setupRecyclerView();
+
         // Fetch the Recipes from the Server
         fetchRecipes();
+
+    }
+
+    /**
+     * This method sets up and initializes the RecyclerView
+     */
+    private void setupRecyclerView() {
+        mRecyclerView = mBinding.recipesRecyclerView;
+        mRecyclerView.setLayoutManager(new GridLayoutManager(this, 1));
+        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        mAdapter = new RecipeAdapter(recipes, this);
+        mRecyclerView.setAdapter(mAdapter);
     }
 
     /**
@@ -52,7 +78,10 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(String response) {
                         // Deserialize the JSON response into a List of Recipe objects
+                        // and set the recipe List to the Adapter.
                         recipes = Arrays.asList(gson.fromJson(response, Recipe[].class));
+                        mAdapter.setRecipeData(recipes);
+
                     }
                 },
                 // Listener for if the StringRequest returns an error.
@@ -65,5 +94,10 @@ public class MainActivity extends AppCompatActivity {
 
         // Add the request to the RequestQueue
         requestQueue.add(request);
+    }
+
+    @Override
+    public void onRecipeClicked(Recipe recipe) {
+
     }
 }
