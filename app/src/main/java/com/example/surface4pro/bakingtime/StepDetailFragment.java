@@ -2,6 +2,7 @@ package com.example.surface4pro.bakingtime;
 
 
 import android.databinding.DataBindingUtil;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -10,6 +11,17 @@ import android.view.ViewGroup;
 
 import com.example.surface4pro.bakingtime.data.Step;
 import com.example.surface4pro.bakingtime.databinding.FragmentStepDetailBinding;
+import com.google.android.exoplayer2.DefaultLoadControl;
+import com.google.android.exoplayer2.DefaultRenderersFactory;
+import com.google.android.exoplayer2.ExoPlayerFactory;
+import com.google.android.exoplayer2.Player;
+import com.google.android.exoplayer2.SimpleExoPlayer;
+import com.google.android.exoplayer2.source.ExtractorMediaSource;
+import com.google.android.exoplayer2.source.MediaSource;
+import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
+import com.google.android.exoplayer2.ui.PlayerView;
+import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
+import com.google.android.exoplayer2.util.Util;
 
 
 /**
@@ -21,6 +33,8 @@ public class StepDetailFragment extends Fragment {
     private Step mStep;
 
     private FragmentStepDetailBinding mBinding;
+    private PlayerView mPlayerView;
+    private SimpleExoPlayer player;
 
     public StepDetailFragment() {
         // Required empty public constructor
@@ -52,10 +66,76 @@ public class StepDetailFragment extends Fragment {
         if (getArguments() != null) {
             mStep = getArguments().getParcelable(ARG_STEP);
             mBinding.stepDetailDescriptionTextView.setText(mStep.getDescription());
+
+            mPlayerView = mBinding.videoView;
+
         } else {
             // TODO add error message TextView
         }
 
         return mBinding.getRoot();
+    }
+
+    /**
+     * This method initializes the video player
+     */
+    private void initializePlayer() {
+        player = ExoPlayerFactory.newSimpleInstance(
+                new DefaultRenderersFactory(getContext()),
+                new DefaultTrackSelector(), new DefaultLoadControl());
+        mPlayerView.setPlayer(player);
+
+        player.setRepeatMode(Player.REPEAT_MODE_ONE);
+
+        Uri uri = Uri.parse(mStep.getVideoURL());
+        MediaSource mediaSource = buildMediaSource(uri);
+
+        player.prepare(mediaSource, true, false);
+        player.setPlayWhenReady(true);
+    }
+
+    private MediaSource buildMediaSource(Uri uri) {
+        return new ExtractorMediaSource.Factory(
+                new DefaultHttpDataSourceFactory("BakingTime")).
+                createMediaSource(uri);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (Util.SDK_INT > 23) {
+            initializePlayer();
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if ((Util.SDK_INT <= 23 || player == null)) {
+            initializePlayer();
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (Util.SDK_INT <= 23) {
+            releasePlayer();
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (Util.SDK_INT > 23) {
+            releasePlayer();
+        }
+    }
+
+    private void releasePlayer() {
+        if (player != null) {
+            player.release();
+            player = null;
+        }
     }
 }
