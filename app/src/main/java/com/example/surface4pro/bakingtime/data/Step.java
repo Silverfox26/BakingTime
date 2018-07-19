@@ -1,13 +1,37 @@
 package com.example.surface4pro.bakingtime.data;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 
-public class Step {
+public class Step implements Parcelable {
 
     private Integer id;
     private String shortDescription;
     private String description;
     private String videoURL;
     private String thumbnailURL;
+    public final static Parcelable.Creator<Step> CREATOR = new Creator<Step>() {
+
+        @SuppressWarnings({
+                "unchecked"
+        })
+        public Step createFromParcel(Parcel in) {
+            return new Step(in);
+        }
+
+        public Step[] newArray(int size) {
+            return (new Step[size]);
+        }
+
+    };
+
+    protected Step(Parcel in) {
+        this.id = ((Integer) in.readValue((Integer.class.getClassLoader())));
+        this.shortDescription = ((String) in.readValue((String.class.getClassLoader())));
+        this.description = ((String) in.readValue((String.class.getClassLoader())));
+        this.videoURL = ((String) in.readValue((String.class.getClassLoader())));
+        this.thumbnailURL = ((String) in.readValue((String.class.getClassLoader())));
+    }
 
     /**
      * No args constructor for use in serialization
@@ -73,4 +97,15 @@ public class Step {
         this.thumbnailURL = thumbnailURL;
     }
 
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeValue(id);
+        dest.writeValue(shortDescription);
+        dest.writeValue(description);
+        dest.writeValue(videoURL);
+        dest.writeValue(thumbnailURL);
+    }
+
+    public int describeContents() {
+        return 0;
+    }
 }

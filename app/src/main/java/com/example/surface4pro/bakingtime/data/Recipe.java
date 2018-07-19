@@ -1,8 +1,11 @@
 package com.example.surface4pro.bakingtime.data;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.List;
 
-public class Recipe {
+public class Recipe implements Parcelable {
 
     private Integer id;
     private String name;
@@ -10,6 +13,29 @@ public class Recipe {
     private List<Step> steps = null;
     private Integer servings;
     private String image;
+    public final static Parcelable.Creator<Recipe> CREATOR = new Creator<Recipe>() {
+
+        @SuppressWarnings({
+                "unchecked"
+        })
+        public Recipe createFromParcel(Parcel in) {
+            return new Recipe(in);
+        }
+
+        public Recipe[] newArray(int size) {
+            return (new Recipe[size]);
+        }
+
+    };
+
+    protected Recipe(Parcel in) {
+        this.id = ((Integer) in.readValue((Integer.class.getClassLoader())));
+        this.name = ((String) in.readValue((String.class.getClassLoader())));
+        in.readList(this.ingredients, (com.example.surface4pro.bakingtime.data.Ingredient.class.getClassLoader()));
+        in.readList(this.steps, (com.example.surface4pro.bakingtime.data.Step.class.getClassLoader()));
+        this.servings = ((Integer) in.readValue((Integer.class.getClassLoader())));
+        this.image = ((String) in.readValue((String.class.getClassLoader())));
+    }
 
     /**
      * No args constructor for use in serialization
@@ -85,4 +111,16 @@ public class Recipe {
         this.image = image;
     }
 
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeValue(id);
+        dest.writeValue(name);
+        dest.writeList(ingredients);
+        dest.writeList(steps);
+        dest.writeValue(servings);
+        dest.writeValue(image);
+    }
+
+    public int describeContents() {
+        return 0;
+    }
 }
