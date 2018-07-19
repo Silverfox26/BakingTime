@@ -1,5 +1,6 @@
 package com.example.surface4pro.bakingtime;
 
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -98,6 +99,8 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Rec
 
     @Override
     public void onRecipeClicked(Recipe recipe) {
-
+        Intent startRecipeStepsIntent = new Intent(this, RecipeStepsActivity.class);
+        startRecipeStepsIntent.putExtra("recipe", recipe);
+        startActivity(startRecipeStepsIntent);
     }
 }

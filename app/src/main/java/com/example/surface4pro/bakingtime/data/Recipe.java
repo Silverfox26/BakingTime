@@ -3,15 +3,16 @@ package com.example.surface4pro.bakingtime.data;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Recipe implements Parcelable {
 
     private Integer id;
     private String name;
-    private List<Ingredient> ingredients = null;
+    private List<Ingredient> ingredients;
     private List<Step> steps = null;
-    private Integer servings;
+    private Integer servings = null;
     private String image;
     public final static Parcelable.Creator<Recipe> CREATOR = new Creator<Recipe>() {
 
@@ -31,7 +32,9 @@ public class Recipe implements Parcelable {
     protected Recipe(Parcel in) {
         this.id = ((Integer) in.readValue((Integer.class.getClassLoader())));
         this.name = ((String) in.readValue((String.class.getClassLoader())));
+        this.ingredients = new ArrayList<>();
         in.readList(this.ingredients, (com.example.surface4pro.bakingtime.data.Ingredient.class.getClassLoader()));
+        this.steps = new ArrayList<>();
         in.readList(this.steps, (com.example.surface4pro.bakingtime.data.Step.class.getClassLoader()));
         this.servings = ((Integer) in.readValue((Integer.class.getClassLoader())));
         this.image = ((String) in.readValue((String.class.getClassLoader())));
