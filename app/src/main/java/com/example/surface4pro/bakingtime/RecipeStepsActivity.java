@@ -44,5 +44,11 @@ public class RecipeStepsActivity extends AppCompatActivity implements StepListFr
     @Override
     public void onRecipeStepSelected(Step step) {
         Log.d(TAG, "onRecipeStepSelected: " + step.getDescription());
+        StepDetailFragment stepDetailFragment = StepDetailFragment.newStepListFragmentInstance(step);
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction()
+                .replace(R.id.recipe_step_detail_container, stepDetailFragment)
+                .commit();
     }
 }
