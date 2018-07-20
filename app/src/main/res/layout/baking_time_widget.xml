@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimary"
+    android:orientation="vertical"
+    android:padding="@dimen/widget_margin">
+
+    <TextView
+        android:id="@+id/recipe_widget_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        android:text="No Recipe Selected"
+        android:textColor="#ffffff"
+        android:textSize="22sp" />
+
+    <ListView
+        android:id="@+id/recipe_widget_list_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_margin="8dp"
+        android:layout_weight="1"
+        android:divider="@android:color/white"
+        android:dividerHeight="1dp"
+        tools:listitem="@layout/baking_time_widget_item" />
+
+</LinearLayout>

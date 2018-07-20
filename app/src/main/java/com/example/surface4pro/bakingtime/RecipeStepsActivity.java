@@ -5,6 +5,10 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.example.surface4pro.bakingtime.data.Recipe;
 import com.example.surface4pro.bakingtime.data.Step;
@@ -68,5 +72,23 @@ public class RecipeStepsActivity extends AppCompatActivity implements StepListFr
                     .addToBackStack(null)
                     .commit();
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.add_to_widget, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.action_add_ingredients_to_widget) {
+            BakingTimeWidgetService.updateWidget(this, mRecipe);
+            Toast.makeText(this, String.format("%s added to the widget", mRecipe.getName()), Toast.LENGTH_SHORT).show();
+            return true;
+        } else
+            return super.onOptionsItemSelected(item);
     }
 }

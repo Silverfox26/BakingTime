@@ -126,10 +126,10 @@ public class RecipeStepsAdapter extends RecyclerView.Adapter<RecipeStepsAdapter.
                     for (int i = 0; i < mRecipe.getIngredients().size(); i++) {
                         Ingredient ingredient = mRecipe.getIngredients().get(i);
                         BigDecimal quantity = new BigDecimal(ingredient.getQuantity());
-                        ingredientsList.append(String.format(Locale.getDefault(), "• (%s %s) %s",
+                        ingredientsList.append(String.format(Locale.getDefault(), "• %s (%s\u00A0%s)",
+                                ingredient.getIngredient(),
                                 quantity.stripTrailingZeros().toPlainString(),
-                                ingredient.getMeasure(),
-                                ingredient.getIngredient()));
+                                ingredient.getMeasure()));
 
                         if (i != mRecipe.getIngredients().size() - 1)
                             ingredientsList.append("\n");
