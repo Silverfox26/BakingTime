@@ -1,0 +1,45 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportHeight="512"
+    android:viewportWidth="512">
+    <path
+        android:fillColor="#FAD0BB"
+        android:pathData="M392,158.5c0,-37.219 -30.281,-67.5 -67.5,-67.5H256l-30,87.5h166V158.5z" />
+    <path
+        android:fillColor="#FFEBC4"
+        android:pathData="M187.5,91c-37.219,0 -67.5,30.281 -67.5,67.5v20h136V91H187.5z" />
+    <path
+        android:fillColor="#F5B5B2"
+        android:pathData="M452,226c0,-37.219 -30.281,-67.5 -67.5,-67.5H256L216,246h236V226z" />
+    <path
+        android:fillColor="#FAD0BB"
+        android:pathData="M127.5,158.5C90.281,158.5 60,188.781 60,226v20h196v-87.5H127.5z" />
+    <path
+        android:fillColor="#F5B5B2"
+        android:pathData="M54.878,331l53.94,181l73.591,0l0,-181z" />
+    <path
+        android:fillColor="#E94C4B"
+        android:pathData="M329.591,331l0,181l73.591,0l53.94,-181z" />
+    <path
+        android:fillColor="#ED6F6E"
+        android:pathData="M236,331l20,181l73.591,0l26.97,-181z" />
+    <path
+        android:fillColor="#F19290"
+        android:pathData="M155.439,331l26.97,181l73.591,0l0,-181z" />
+    <path
+        android:fillColor="#72231A"
+        android:pathData="M444.5,226H256l-30,67.5l30,67.5h188.5c37.279,0 67.5,-30.221 67.5,-67.5S481.779,226 444.5,226z" />
+    <path
+        android:fillColor="#98432B"
+        android:pathData="M67.5,226C30.221,226 0,256.221 0,293.5S30.221,361 67.5,361H256V226H67.5z" />
+    <path
+        android:fillColor="#F5B5B2"
+        android:pathData="M319.269,191.269v110c0,16.568 13.431,30 30,30s30,-13.432 30,-30v-110L319.269,191.269L319.269,191.269z" />
+    <path
+        android:fillColor="#BF2724"
+        android:pathData="M256,0l-25.111,45.5L256,91c25.129,0 45.5,-20.371 45.5,-45.5S281.129,0 256,0z" />
+    <path
+        android:fillColor="#E52929"
+        android:pathData="M210.5,45.5c0,25.129 20.371,45.5 45.5,45.5V0C230.871,0 210.5,20.371 210.5,45.5z" />
+</vector>

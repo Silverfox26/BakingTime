@@ -68,6 +68,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
     @Override
     public void onBindViewHolder(@NonNull RecipeViewHolder holder, final int position) {
         holder.binding.recipeNameTextView.setText(mRecipeList.get(position).getName());
+        holder.binding.recipeServingSizeTextView.setText("Servings: " + mRecipeList.get(position).getServings().toString());
     }
 
     /**
