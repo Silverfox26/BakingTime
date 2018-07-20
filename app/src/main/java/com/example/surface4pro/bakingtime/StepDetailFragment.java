@@ -5,6 +5,7 @@ import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,11 +30,14 @@ import com.google.android.exoplayer2.util.Util;
 public class StepDetailFragment extends Fragment {
 
     private static final String ARG_STEP = "step";
+    private static final String POSITION_KEY = "position";
     private Step mStep;
 
     private FragmentStepDetailBinding mBinding;
     private PlayerView mPlayerView;
     private SimpleExoPlayer player;
+
+    private long mCurrentPosition = 0;
 
     public StepDetailFragment() {
         // Required empty public constructor
@@ -62,9 +66,15 @@ public class StepDetailFragment extends Fragment {
         mBinding = DataBindingUtil.inflate(
                 inflater, R.layout.fragment_step_detail, container, false);
 
+        if (savedInstanceState != null && savedInstanceState.containsKey(POSITION_KEY)) {
+            mCurrentPosition = savedInstanceState.getLong(POSITION_KEY);
+        }
+
         if (getArguments() != null) {
             mStep = getArguments().getParcelable(ARG_STEP);
-            mBinding.stepDetailDescriptionTextView.setText(mStep.getDescription());
+            if (mBinding.stepDetailDescriptionTextView != null) {
+                mBinding.stepDetailDescriptionTextView.setText(mStep.getDescription());
+            }
 
             mPlayerView = mBinding.videoView;
 
@@ -88,7 +98,14 @@ public class StepDetailFragment extends Fragment {
             Uri uri = Uri.parse(mStep.getVideoURL());
             MediaSource mediaSource = buildMediaSource(uri);
 
-            player.prepare(mediaSource, true, false);
+            player.prepare(mediaSource);
+
+            Log.d("AAA", "initializePlayer: " + mCurrentPosition);
+
+            if (mCurrentPosition != 0) {
+                player.seekTo(mCurrentPosition);
+            }
+
             player.setPlayWhenReady(true);
             mBinding.videoView.setVisibility(View.VISIBLE);
         }
@@ -106,6 +123,8 @@ public class StepDetailFragment extends Fragment {
         if (Util.SDK_INT > 23) {
             if (!mStep.getVideoURL().isEmpty()) {
                 initializePlayer();
+            } else {
+                mBinding.stepDetailDescriptionTextView.setVisibility(View.VISIBLE);
             }
         }
     }
@@ -116,6 +135,8 @@ public class StepDetailFragment extends Fragment {
         if ((Util.SDK_INT <= 23 || player == null)) {
             if (!mStep.getVideoURL().isEmpty()) {
                 initializePlayer();
+            } else {
+                mBinding.stepDetailDescriptionTextView.setVisibility(View.VISIBLE);
             }
         }
     }
@@ -140,6 +161,15 @@ public class StepDetailFragment extends Fragment {
         if (player != null) {
             player.release();
             player = null;
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (player != null) {
+            mCurrentPosition = player.getCurrentPosition();
+            outState.putLong(POSITION_KEY, mCurrentPosition);
         }
     }
 }
