@@ -14,11 +14,16 @@ public class RecipeStepsActivity extends AppCompatActivity implements StepListFr
     private static final String TAG = RecipeStepsActivity.class.getSimpleName();
     StepListFragment mStepListFragment;
     private Recipe mRecipe;
+    // A single-pane display refers to phone screens, and two-pane to larger tablet screens
+    private boolean mTwoPane;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_steps);
+
+        // Check if we are in two pane mode
+        mTwoPane = findViewById(R.id.steps_linear_layout) != null;
 
         // If the activity is started for the first time get the intent and
         // add StepListFragment.
@@ -47,8 +52,21 @@ public class RecipeStepsActivity extends AppCompatActivity implements StepListFr
         StepDetailFragment stepDetailFragment = StepDetailFragment.newStepListFragmentInstance(step);
 
         FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction()
-                .replace(R.id.recipe_step_detail_container, stepDetailFragment)
-                .commit();
+
+        if (mTwoPane) {
+            fragmentManager.beginTransaction()
+                    .replace(R.id.recipe_step_detail_container, stepDetailFragment)
+                    .commit();
+        } else {
+            fragmentManager.beginTransaction()
+                    .setCustomAnimations(
+                            R.anim.slide_in_right,
+                            R.anim.slide_out_left,
+                            R.anim.slide_in_left,
+                            R.anim.slide_out_right)
+                    .replace(R.id.recipe_steps_container, stepDetailFragment)
+                    .addToBackStack(null)
+                    .commit();
+        }
     }
 }
