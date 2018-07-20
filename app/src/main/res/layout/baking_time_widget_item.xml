@@ -12,9 +12,7 @@
         android:layout_marginBottom="4dp"
         android:layout_marginTop="4dp"
         android:gravity="center_vertical"
-        android:textColor="@android:color/white"
         android:textSize="14sp"
-        tools:background="?attr/colorPrimary"
         tools:text="(1 TSPN)" />
 
     <TextView
@@ -24,9 +22,7 @@
         android:layout_marginBottom="4dp"
         android:layout_marginTop="4dp"
         android:gravity="center_vertical"
-        android:textColor="@android:color/white"
         android:textSize="14sp"
-        tools:background="?attr/colorPrimary"
         tools:text="Bittersweet chocolate (60-70% cacao)">
 
     </TextView>

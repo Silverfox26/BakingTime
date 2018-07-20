@@ -3,26 +3,29 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimary"
-    android:orientation="vertical"
-    android:padding="@dimen/widget_margin">
+    android:background="@color/colorPrimaryLight"
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/recipe_widget_text_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="8dp"
+        android:background="@color/colorPrimary"
         android:text="@string/widget_no_recipe"
         android:textColor="#ffffff"
+        android:padding="16dp"
         android:textSize="22sp" />
 
     <ListView
         android:id="@+id/recipe_widget_list_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_margin="8dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="8dp"
         android:layout_weight="1"
-        android:divider="@android:color/white"
+        android:divider="@color/color_divider"
         android:dividerHeight="1dp"
         tools:listitem="@layout/baking_time_widget_item" />
 
