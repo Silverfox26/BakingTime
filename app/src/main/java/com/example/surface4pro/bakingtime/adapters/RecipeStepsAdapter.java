@@ -8,10 +8,14 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.surface4pro.bakingtime.R;
+import com.example.surface4pro.bakingtime.data.Ingredient;
 import com.example.surface4pro.bakingtime.data.Recipe;
 import com.example.surface4pro.bakingtime.data.Step;
 import com.example.surface4pro.bakingtime.databinding.RecipeStepIngredientItemBinding;
 import com.example.surface4pro.bakingtime.databinding.RecipeStepItemBinding;
+
+import java.math.BigDecimal;
+import java.util.Locale;
 
 public class RecipeStepsAdapter extends RecyclerView.Adapter<RecipeStepsAdapter.RecipeStepsViewHolder> {
 
@@ -117,6 +121,21 @@ public class RecipeStepsAdapter extends RecyclerView.Adapter<RecipeStepsAdapter.
             // If the view type of the layout is today, display a large icon
             case VIEW_TYPE_INGREDIENTS:
                 if (holder.ingredientItemBinding != null) {
+
+                    StringBuilder ingredientsList = new StringBuilder();
+                    for (int i = 0; i < mRecipe.getIngredients().size(); i++) {
+                        Ingredient ingredient = mRecipe.getIngredients().get(i);
+                        BigDecimal quantity = new BigDecimal(ingredient.getQuantity());
+                        ingredientsList.append(String.format(Locale.getDefault(), "• (%s %s) %s",
+                                quantity.stripTrailingZeros().toPlainString(),
+                                ingredient.getMeasure(),
+                                ingredient.getIngredient()));
+
+                        if (i != mRecipe.getIngredients().size() - 1)
+                            ingredientsList.append("\n");
+                    }
+                    holder.ingredientItemBinding.ingredientsTextView.setText(ingredientsList.toString());
+
                 }
                 break;
 
