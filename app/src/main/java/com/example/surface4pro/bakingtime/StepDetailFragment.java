@@ -14,7 +14,6 @@ import com.example.surface4pro.bakingtime.databinding.FragmentStepDetailBinding;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.DefaultRenderersFactory;
 import com.google.android.exoplayer2.ExoPlayerFactory;
-import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.source.ExtractorMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
@@ -80,18 +79,19 @@ public class StepDetailFragment extends Fragment {
      * This method initializes the video player
      */
     private void initializePlayer() {
-        player = ExoPlayerFactory.newSimpleInstance(
-                new DefaultRenderersFactory(getContext()),
-                new DefaultTrackSelector(), new DefaultLoadControl());
-        mPlayerView.setPlayer(player);
+        if (player == null) {
+            player = ExoPlayerFactory.newSimpleInstance(
+                    new DefaultRenderersFactory(getContext()),
+                    new DefaultTrackSelector(), new DefaultLoadControl());
+            mPlayerView.setPlayer(player);
 
-        player.setRepeatMode(Player.REPEAT_MODE_ONE);
+            Uri uri = Uri.parse(mStep.getVideoURL());
+            MediaSource mediaSource = buildMediaSource(uri);
 
-        Uri uri = Uri.parse(mStep.getVideoURL());
-        MediaSource mediaSource = buildMediaSource(uri);
-
-        player.prepare(mediaSource, true, false);
-        player.setPlayWhenReady(true);
+            player.prepare(mediaSource, true, false);
+            player.setPlayWhenReady(true);
+            mBinding.videoView.setVisibility(View.VISIBLE);
+        }
     }
 
     private MediaSource buildMediaSource(Uri uri) {
@@ -104,7 +104,9 @@ public class StepDetailFragment extends Fragment {
     public void onStart() {
         super.onStart();
         if (Util.SDK_INT > 23) {
-            initializePlayer();
+            if (!mStep.getVideoURL().isEmpty()) {
+                initializePlayer();
+            }
         }
     }
 
@@ -112,7 +114,9 @@ public class StepDetailFragment extends Fragment {
     public void onResume() {
         super.onResume();
         if ((Util.SDK_INT <= 23 || player == null)) {
-            initializePlayer();
+            if (!mStep.getVideoURL().isEmpty()) {
+                initializePlayer();
+            }
         }
     }
 

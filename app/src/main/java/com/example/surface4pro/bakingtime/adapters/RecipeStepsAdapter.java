@@ -123,7 +123,7 @@ public class RecipeStepsAdapter extends RecyclerView.Adapter<RecipeStepsAdapter.
             // If the view type of the layout is today, display a small icon
             case VIEW_TYPE_RECIPE_STEP:
                 if (holder.binding != null) {
-                    holder.binding.recipeStepTextView.setText(mRecipe.getSteps().get(position).getShortDescription());
+                    holder.binding.recipeStepTextView.setText(mRecipe.getSteps().get(position - 1).getShortDescription());
                 }
                 break;
 
@@ -141,7 +141,7 @@ public class RecipeStepsAdapter extends RecyclerView.Adapter<RecipeStepsAdapter.
      */
     @Override
     public int getItemCount() {
-        return mRecipe.getSteps().size();
+        return mRecipe.getSteps().size() + 1;
     }
 
     /**
@@ -194,7 +194,7 @@ public class RecipeStepsAdapter extends RecyclerView.Adapter<RecipeStepsAdapter.
         @Override
         public void onClick(View v) {
             int adapterPosition = getAdapterPosition();
-            Step clickedStep = mRecipe.getSteps().get(adapterPosition);
+            Step clickedStep = mRecipe.getSteps().get(adapterPosition - 1);
             mClickHandler.onRecipeStepClicked(clickedStep);
         }
     }
