@@ -10,11 +10,16 @@ import android.view.ViewGroup;
 import com.example.surface4pro.bakingtime.R;
 import com.example.surface4pro.bakingtime.data.Recipe;
 import com.example.surface4pro.bakingtime.data.Step;
+import com.example.surface4pro.bakingtime.databinding.RecipeStepIngredientItemBinding;
 import com.example.surface4pro.bakingtime.databinding.RecipeStepItemBinding;
 
 public class RecipeStepsAdapter extends RecyclerView.Adapter<RecipeStepsAdapter.RecipeStepsViewHolder> {
 
     private static final String TAG = RecipeStepsAdapter.class.getSimpleName();
+
+    // Declare constant IDs for the ViewType for ingredients and for recipe step
+    private static final int VIEW_TYPE_INGREDIENTS = 0;
+    private static final int VIEW_TYPE_RECIPE_STEP = 1;
 
     // On-click handler to make it easy for an Activity to interface with the RecyclerView
     private final RecipeStepsAdapterOnClickHandler mClickHandler;
@@ -36,6 +41,27 @@ public class RecipeStepsAdapter extends RecyclerView.Adapter<RecipeStepsAdapter.
     }
 
     /**
+     * Returns an integer code related to the type of View we want the ViewHolder to be at a given
+     * position. This method is useful when we want to use different layouts for different items
+     * depending on their position.
+     *
+     * @param position index within our RecyclerView
+     * @return the view type (ingredients or recipe step)
+     */
+    @Override
+    public int getItemViewType(int position) {
+
+        // Within getItemViewType, if position is 0, return the ID for the ingredients viewType
+        if (position == 0) {
+            return VIEW_TYPE_INGREDIENTS;
+
+            // Otherwise, return the ID for the recipe step viewType
+        } else {
+            return VIEW_TYPE_RECIPE_STEP;
+        }
+    }
+
+    /**
      * This gets called when each new ViewHolder is created. This happens when the RecyclerView
      * is laid out. Enough ViewHolders will be created to fill the screen and allow for scrolling.
      *
@@ -52,10 +78,25 @@ public class RecipeStepsAdapter extends RecyclerView.Adapter<RecipeStepsAdapter.
             mLayoutInflater = LayoutInflater.from(viewGroup.getContext());
         }
 
-        RecipeStepItemBinding binding =
-                DataBindingUtil.inflate(mLayoutInflater, R.layout.recipe_step_item, viewGroup, false);
+        switch (viewType) {
 
-        return new RecipeStepsViewHolder(binding);
+            // If the view type of the layout is ingredients, use ingredients layout
+            case VIEW_TYPE_INGREDIENTS:
+                RecipeStepIngredientItemBinding ingredientBinding =
+                        DataBindingUtil.inflate(mLayoutInflater, R.layout.recipe_step_ingredient_item, viewGroup, false);
+                return new RecipeStepsViewHolder(ingredientBinding);
+
+            // If the view type of the layout is recipe step, use recipe step layout
+            case VIEW_TYPE_RECIPE_STEP:
+                RecipeStepItemBinding stepItemBinding =
+                        DataBindingUtil.inflate(mLayoutInflater, R.layout.recipe_step_item, viewGroup, false);
+
+                return new RecipeStepsViewHolder(stepItemBinding);
+
+            // Otherwise, throw an IllegalArgumentException
+            default:
+                throw new IllegalArgumentException("Invalid view type, value of " + viewType);
+        }
     }
 
     /**
@@ -68,7 +109,28 @@ public class RecipeStepsAdapter extends RecyclerView.Adapter<RecipeStepsAdapter.
      */
     @Override
     public void onBindViewHolder(@NonNull RecipeStepsViewHolder holder, final int position) {
-        holder.binding.recipeStepTextView.setText(mRecipe.getSteps().get(position).getShortDescription());
+
+        int viewType = getItemViewType(position);
+
+        switch (viewType) {
+
+            // If the view type of the layout is today, display a large icon
+            case VIEW_TYPE_INGREDIENTS:
+                if (holder.ingredientItemBinding != null) {
+                }
+                break;
+
+            // If the view type of the layout is today, display a small icon
+            case VIEW_TYPE_RECIPE_STEP:
+                if (holder.binding != null) {
+                    holder.binding.recipeStepTextView.setText(mRecipe.getSteps().get(position).getShortDescription());
+                }
+                break;
+
+            // Otherwise, throw an IllegalArgumentException
+            default:
+                throw new IllegalArgumentException("Invalid view type, value of " + viewType);
+        }
     }
 
     /**
@@ -95,6 +157,7 @@ public class RecipeStepsAdapter extends RecyclerView.Adapter<RecipeStepsAdapter.
     class RecipeStepsViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private final RecipeStepItemBinding binding;
+        private final RecipeStepIngredientItemBinding ingredientItemBinding;
 
         /**
          * Constructor for our ViewHolder. In here we set our binding instance and the onClickListener.
@@ -104,8 +167,23 @@ public class RecipeStepsAdapter extends RecyclerView.Adapter<RecipeStepsAdapter.
          */
         RecipeStepsViewHolder(final RecipeStepItemBinding itemBinding) {
             super(itemBinding.getRoot());
+
             this.binding = itemBinding;
+            this.ingredientItemBinding = null;
             itemBinding.getRoot().setOnClickListener(this);
+        }
+
+        /**
+         * Constructor for our ViewHolder. In here we set our binding instance and the onClickListener.
+         *
+         * @param ingredientItemBinding The RecipeStepItemBinding instance that was instantiated in
+         *                              {@link RecipeStepsAdapter#onCreateViewHolder(ViewGroup, int)}
+         */
+        RecipeStepsViewHolder(final RecipeStepIngredientItemBinding ingredientItemBinding) {
+            super(ingredientItemBinding.getRoot());
+
+            this.binding = null;
+            this.ingredientItemBinding = ingredientItemBinding;
         }
 
         /**
