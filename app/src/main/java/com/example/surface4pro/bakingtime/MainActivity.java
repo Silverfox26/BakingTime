@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Rec
         mRecyclerView.setLayoutManager(new GridLayoutManager(this, spanCount));
 
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        mAdapter = new RecipeAdapter(recipes, this);
+        mAdapter = new RecipeAdapter(this, recipes, this);
         mRecyclerView.setAdapter(mAdapter);
     }
 

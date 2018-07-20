@@ -10,8 +10,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.surface4pro.bakingtime.data.Step;
 import com.example.surface4pro.bakingtime.databinding.FragmentStepDetailBinding;
+import com.example.surface4pro.bakingtime.utilities.GlideApp;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.DefaultRenderersFactory;
 import com.google.android.exoplayer2.ExoPlayerFactory;
@@ -76,6 +78,15 @@ public class StepDetailFragment extends Fragment {
                 mBinding.stepDetailDescriptionTextView.setText(mStep.getDescription());
             }
 
+            if (mStep.getVideoURL().isEmpty() && !mStep.getThumbnailURL().isEmpty()) {
+
+                GlideApp.with(this)
+                        .load(mStep.getThumbnailURL())
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .placeholder(R.drawable.ic_cupcake)
+                        .into(mBinding.stepImageView);
+                mBinding.stepImageView.setVisibility(View.VISIBLE);
+            }
             mPlayerView = mBinding.videoView;
 
         } else {
@@ -124,7 +135,7 @@ public class StepDetailFragment extends Fragment {
             if (!mStep.getVideoURL().isEmpty()) {
                 initializePlayer();
             } else {
-                mBinding.stepDetailDescriptionTextView.setVisibility(View.VISIBLE);
+                mBinding.instructionsScrollView.setVisibility(View.VISIBLE);
             }
         }
     }
@@ -136,7 +147,7 @@ public class StepDetailFragment extends Fragment {
             if (!mStep.getVideoURL().isEmpty()) {
                 initializePlayer();
             } else {
-                mBinding.stepDetailDescriptionTextView.setVisibility(View.VISIBLE);
+                mBinding.instructionsScrollView.setVisibility(View.VISIBLE);
             }
         }
     }

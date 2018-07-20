@@ -3,6 +3,7 @@ package com.example.surface4pro.bakingtime;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -28,6 +29,8 @@ import com.example.surface4pro.bakingtime.databinding.FragmentStepListBinding;
 public class StepListFragment extends Fragment implements RecipeStepsAdapter.RecipeStepsAdapterOnClickHandler {
 
     private static final String ARG_RECIPE = "recipe";
+    private static final String RECIPE_KEY = "recipe_instance";
+
     private Recipe mRecipe;
 
     private OnRecipeStepClickListener mListener;
@@ -67,6 +70,10 @@ public class StepListFragment extends Fragment implements RecipeStepsAdapter.Rec
         // Inflate the layout for this fragment
         mBinding = DataBindingUtil.inflate(
                 inflater, R.layout.fragment_step_list, container, false);
+
+        if (savedInstanceState != null && savedInstanceState.containsKey(RECIPE_KEY)) {
+            mRecipe = savedInstanceState.getParcelable(RECIPE_KEY);
+        }
 
         // Check if Arguments were passed in during creation of the Fragment.
         // If yes, setup the RecyclerView with the passed in data.
@@ -130,5 +137,11 @@ public class StepListFragment extends Fragment implements RecipeStepsAdapter.Rec
      */
     public interface OnRecipeStepClickListener {
         void onRecipeStepSelected(Step step);
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable(RECIPE_KEY, mRecipe);
     }
 }

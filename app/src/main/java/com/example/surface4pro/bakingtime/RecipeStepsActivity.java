@@ -2,6 +2,7 @@ package com.example.surface4pro.bakingtime;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -16,6 +17,9 @@ import com.example.surface4pro.bakingtime.data.Step;
 public class RecipeStepsActivity extends AppCompatActivity implements StepListFragment.OnRecipeStepClickListener {
 
     private static final String TAG = RecipeStepsActivity.class.getSimpleName();
+
+    private static final String RECIPE_KEY = "recipe_instance";
+
     StepListFragment mStepListFragment;
     private Recipe mRecipe;
     // A single-pane display refers to phone screens, and two-pane to larger tablet screens
@@ -45,6 +49,8 @@ public class RecipeStepsActivity extends AppCompatActivity implements StepListFr
                         .add(R.id.recipe_steps_container, mStepListFragment)
                         .commit();
             }
+        } else {
+            mRecipe = savedInstanceState.getParcelable(RECIPE_KEY);
         }
     }
 
@@ -90,5 +96,11 @@ public class RecipeStepsActivity extends AppCompatActivity implements StepListFr
             return true;
         } else
             return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable(RECIPE_KEY, mRecipe);
     }
 }

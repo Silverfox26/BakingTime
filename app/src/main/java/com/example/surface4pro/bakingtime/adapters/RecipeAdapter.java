@@ -1,5 +1,6 @@
 package com.example.surface4pro.bakingtime.adapters;
 
+import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -7,13 +8,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.surface4pro.bakingtime.R;
 import com.example.surface4pro.bakingtime.data.Recipe;
 import com.example.surface4pro.bakingtime.databinding.RecipeItemBinding;
+import com.example.surface4pro.bakingtime.utilities.GlideApp;
 
 import java.util.List;
 
 public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeViewHolder> {
+    private Context mContext;
 
     private static final String TAG = RecipeAdapter.class.getSimpleName();
     // On-click handler to make it easy for an Activity to interface with the RecyclerView
@@ -29,7 +33,8 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
      * @param recipes      A List of Recipe objects
      * @param clickHandler A clickHandler
      */
-    public RecipeAdapter(List<Recipe> recipes, RecipeAdapterOnClickHandler clickHandler) {
+    public RecipeAdapter(Context context, List<Recipe> recipes, RecipeAdapterOnClickHandler clickHandler) {
+        this.mContext = context;
         mRecipeList = recipes;
         mClickHandler = clickHandler;
     }
@@ -69,6 +74,16 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
     public void onBindViewHolder(@NonNull RecipeViewHolder holder, final int position) {
         holder.binding.recipeNameTextView.setText(mRecipeList.get(position).getName());
         holder.binding.recipeServingSizeTextView.setText("Servings: " + mRecipeList.get(position).getServings().toString());
+
+        // Load recipe image, if one is available
+        String recipeImage = mRecipeList.get(position).getImage();
+        if (!recipeImage.isEmpty()) {
+            GlideApp.with(mContext)
+                    .load(recipeImage)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .placeholder(R.drawable.ic_cupcake)
+                    .into(holder.binding.recipeImageView);
+        }
     }
 
     /**
