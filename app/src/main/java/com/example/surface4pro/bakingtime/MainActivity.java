@@ -1,6 +1,7 @@
 package com.example.surface4pro.bakingtime;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -44,14 +45,15 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Rec
         super.onCreate(savedInstanceState);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
 
+        boolean isTabletSize = getResources().getBoolean(R.bool.isTablet);
+
         // Instantiate new RequestQueue that will handle running the network request in a background thread
         requestQueue = Volley.newRequestQueue(this);
 
         // Instantiate new Gson instance
         gson = new Gson();
 
-        // Initialize the RecyclerView
-        setupRecyclerView();
+        setupRecyclerView(isTabletSize);
 
         // Fetch the Recipes from the Server
         fetchRecipes();
@@ -61,9 +63,22 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Rec
     /**
      * This method sets up and initializes the RecyclerView
      */
-    private void setupRecyclerView() {
+    private void setupRecyclerView(boolean isTabletSize) {
+
         mRecyclerView = mBinding.recipesRecyclerView;
-        mRecyclerView.setLayoutManager(new GridLayoutManager(this, 1));
+
+        int orientation = this.getResources().getConfiguration().orientation;
+        int spanCount;
+
+        if (!isTabletSize && orientation == Configuration.ORIENTATION_PORTRAIT) {
+            spanCount = 1;
+        } else if (isTabletSize && orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            spanCount = 3;
+        } else {
+            spanCount = 2;
+        }
+        mRecyclerView.setLayoutManager(new GridLayoutManager(this, spanCount));
+
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mAdapter = new RecipeAdapter(recipes, this);
         mRecyclerView.setAdapter(mAdapter);
