@@ -35,11 +35,6 @@ public class StepListFragment extends Fragment implements RecipeStepsAdapter.Rec
 
     private OnRecipeStepClickListener mListener;
 
-    private RecyclerView mRecyclerView;
-    private RecipeStepsAdapter mAdapter;
-
-    private FragmentStepListBinding mBinding;
-
     public StepListFragment() {
         // Required empty public constructor
     }
@@ -60,17 +55,13 @@ public class StepListFragment extends Fragment implements RecipeStepsAdapter.Rec
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        mBinding = DataBindingUtil.inflate(
+        FragmentStepListBinding mBinding = DataBindingUtil.inflate(
                 inflater, R.layout.fragment_step_list, container, false);
 
+        // If the recipe was saved after a configuration change, retrieve it now.
         if (savedInstanceState != null && savedInstanceState.containsKey(RECIPE_KEY)) {
             mRecipe = savedInstanceState.getParcelable(RECIPE_KEY);
         }
@@ -81,10 +72,10 @@ public class StepListFragment extends Fragment implements RecipeStepsAdapter.Rec
         if (getArguments() != null) {
             mRecipe = getArguments().getParcelable(ARG_RECIPE);
 
-            mRecyclerView = mBinding.recipeStepsRecyclerView;
+            RecyclerView mRecyclerView = mBinding.recipeStepsRecyclerView;
             mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
             mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-            mAdapter = new RecipeStepsAdapter(mRecipe, this);
+            RecipeStepsAdapter mAdapter = new RecipeStepsAdapter(mRecipe, this);
             mRecyclerView.setAdapter(mAdapter);
         } else {
             // TODO add error message TextView

@@ -19,8 +19,6 @@ import java.util.Locale;
 
 public class RecipeStepsAdapter extends RecyclerView.Adapter<RecipeStepsAdapter.RecipeStepsViewHolder> {
 
-    private static final String TAG = RecipeStepsAdapter.class.getSimpleName();
-
     // Declare constant IDs for the ViewType for ingredients and for recipe step
     private static final int VIEW_TYPE_INGREDIENTS = 0;
     private static final int VIEW_TYPE_RECIPE_STEP = 1;
@@ -29,7 +27,7 @@ public class RecipeStepsAdapter extends RecyclerView.Adapter<RecipeStepsAdapter.
     private final RecipeStepsAdapterOnClickHandler mClickHandler;
 
     // Cached copy of the Recipe
-    private Recipe mRecipe;
+    private final Recipe mRecipe;
     private LayoutInflater mLayoutInflater;
 
     /**
@@ -58,9 +56,8 @@ public class RecipeStepsAdapter extends RecyclerView.Adapter<RecipeStepsAdapter.
         // Within getItemViewType, if position is 0, return the ID for the ingredients viewType
         if (position == 0) {
             return VIEW_TYPE_INGREDIENTS;
-
-            // Otherwise, return the ID for the recipe step viewType
         } else {
+            // Otherwise, return the ID for the recipe step viewType
             return VIEW_TYPE_RECIPE_STEP;
         }
     }
@@ -87,14 +84,21 @@ public class RecipeStepsAdapter extends RecyclerView.Adapter<RecipeStepsAdapter.
             // If the view type of the layout is ingredients, use ingredients layout
             case VIEW_TYPE_INGREDIENTS:
                 RecipeStepIngredientItemBinding ingredientBinding =
-                        DataBindingUtil.inflate(mLayoutInflater, R.layout.recipe_step_ingredient_item, viewGroup, false);
+                        DataBindingUtil.inflate(
+                                mLayoutInflater,
+                                R.layout.recipe_step_ingredient_item,
+                                viewGroup,
+                                false);
                 return new RecipeStepsViewHolder(ingredientBinding);
 
             // If the view type of the layout is recipe step, use recipe step layout
             case VIEW_TYPE_RECIPE_STEP:
                 RecipeStepItemBinding stepItemBinding =
-                        DataBindingUtil.inflate(mLayoutInflater, R.layout.recipe_step_item, viewGroup, false);
-
+                        DataBindingUtil.inflate(
+                                mLayoutInflater,
+                                R.layout.recipe_step_item,
+                                viewGroup,
+                                false);
                 return new RecipeStepsViewHolder(stepItemBinding);
 
             // Otherwise, throw an IllegalArgumentException
@@ -118,7 +122,7 @@ public class RecipeStepsAdapter extends RecyclerView.Adapter<RecipeStepsAdapter.
 
         switch (viewType) {
 
-            // If the view type of the layout is today, display a large icon
+            // If the view type of the layout is ingredients, set ingredients data
             case VIEW_TYPE_INGREDIENTS:
                 if (holder.ingredientItemBinding != null) {
 
@@ -139,7 +143,7 @@ public class RecipeStepsAdapter extends RecyclerView.Adapter<RecipeStepsAdapter.
                 }
                 break;
 
-            // If the view type of the layout is today, display a small icon
+            // If the view type of the layout is recipe step, set recipe step data
             case VIEW_TYPE_RECIPE_STEP:
                 if (holder.binding != null) {
                     holder.binding.recipeStepTextView.setText(mRecipe.getSteps().get(position - 1).getShortDescription());

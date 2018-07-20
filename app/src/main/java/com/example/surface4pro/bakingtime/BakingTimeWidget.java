@@ -14,11 +14,11 @@ import com.example.surface4pro.bakingtime.data.Recipe;
  */
 public class BakingTimeWidget extends AppWidgetProvider {
 
-    static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
-                                int appWidgetId) {
+    private static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
+                                        int appWidgetId) {
 
+        // Load recipe from sharedPreferences
         Recipe recipe = Preferences.loadRecipe(context);
-
 
         if (recipe != null) {
             // Construct the RemoteViews object
@@ -36,6 +36,7 @@ public class BakingTimeWidget extends AppWidgetProvider {
             // Initialize the list view
             Intent serviceIntent = new Intent(context, BakingTimeWidgetService.class);
             serviceIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
+
             // Bind the remote adapter
             views.setRemoteAdapter(R.id.recipe_widget_list_view, serviceIntent);
 
@@ -70,4 +71,3 @@ public class BakingTimeWidget extends AppWidgetProvider {
         // Enter relevant functionality for when the last widget is disabled
     }
 }
-

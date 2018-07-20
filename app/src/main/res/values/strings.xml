@@ -2,7 +2,9 @@
     <string name="app_name">Baking Time</string>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="appwidget_text">EXAMPLE</string>
-    <string name="add_widget">Add widget</string>
+    <string name="added_to_widget">%s added to the widget</string>
+    <string name="servings_count">Servings: %s</string>
+    <string name="menu_show_in_widget">Show In Widget</string>
+    <string name="widget_no_recipe">No Recipe Selected</string>
+    <string name="ingredients_heading">Inredients</string>
 </resources>

@@ -1,9 +1,6 @@
 package com.example.surface4pro.bakingtime;
 
-import android.appwidget.AppWidgetManager;
 import android.content.Context;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Adapter;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
@@ -13,12 +10,12 @@ import com.example.surface4pro.bakingtime.data.Recipe;
 import java.math.BigDecimal;
 import java.util.Locale;
 
-public class WidgetListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
+class WidgetListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
 
-    private Context mContext;
+    private final Context mContext;
     private Recipe mRecipe;
 
-    public WidgetListRemoteViewsFactory(Context context) {
+    WidgetListRemoteViewsFactory(Context context) {
         this.mContext = context;
     }
 
@@ -33,11 +30,6 @@ public class WidgetListRemoteViewsFactory implements RemoteViewsService.RemoteVi
     /**
      * Called when notifyDataSetChanged() is triggered on the remote adapter. This allows a
      * RemoteViewsFactory to respond to data changes by updating any internal references.
-     * <p>
-     * Note: expensive tasks can be safely performed synchronously within this method. In the
-     * interim, the old data will be displayed within the widget.
-     *
-     * @see AppWidgetManager#notifyAppWidgetViewDataChanged(int[], int)
      */
     @Override
     public void onDataSetChanged() {
@@ -54,9 +46,9 @@ public class WidgetListRemoteViewsFactory implements RemoteViewsService.RemoteVi
     }
 
     /**
-     * See {@link Adapter#getCount()}
+     * Returns the size of the Ingredients data
      *
-     * @return Count of items.
+     * @return Count of ingredients.
      */
     @Override
     public int getCount() {
@@ -64,10 +56,7 @@ public class WidgetListRemoteViewsFactory implements RemoteViewsService.RemoteVi
     }
 
     /**
-     * See {@link Adapter#getView(int, View, ViewGroup)}.
-     * <p>
-     * Note: expensive tasks can be safely performed synchronously within this method, and a
-     * loading view will be displayed in the interim. See {@link #getLoadingView()}.
+     * This method sets the data to the list view items
      *
      * @param position The position of the item within the Factory's data set of the item whose
      *                 view we want.
@@ -77,6 +66,7 @@ public class WidgetListRemoteViewsFactory implements RemoteViewsService.RemoteVi
     public RemoteViews getViewAt(int position) {
         RemoteViews listItem = new RemoteViews(mContext.getPackageName(), R.layout.baking_time_widget_item);
 
+        // Concatenate and format the quantity and measure strings
         StringBuilder ingredientQuantity = new StringBuilder();
         BigDecimal quantity = new BigDecimal(mRecipe.getIngredients().get(position).getQuantity());
         ingredientQuantity.append(String.format(Locale.getDefault(), "%s %s",
@@ -102,7 +92,7 @@ public class WidgetListRemoteViewsFactory implements RemoteViewsService.RemoteVi
     }
 
     /**
-     * See {@link Adapter#getViewTypeCount()}.
+     * Returns the number of view types this factory returns.
      *
      * @return The number of types of Views that will be returned by this factory.
      */
@@ -112,7 +102,7 @@ public class WidgetListRemoteViewsFactory implements RemoteViewsService.RemoteVi
     }
 
     /**
-     * See {@link Adapter#getItemId(int)}.
+     * Gets the item id of an item at the specified position.
      *
      * @param position The position of the item within the data set whose row id we want.
      * @return The id of the item at the specified position.

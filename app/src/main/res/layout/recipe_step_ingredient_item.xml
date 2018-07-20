@@ -49,7 +49,7 @@
             android:paddingRight="16dp"
             android:paddingStart="22dp"
             android:paddingTop="8dp"
-            android:text="Inredients"
+            android:text="@string/ingredients_heading"
             android:textColor="@android:color/white"
             android:textSize="22sp"
             app:layout_constraintStart_toStartOf="parent"

@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -16,12 +15,11 @@ import com.example.surface4pro.bakingtime.data.Step;
 
 public class RecipeStepsActivity extends AppCompatActivity implements StepListFragment.OnRecipeStepClickListener {
 
-    private static final String TAG = RecipeStepsActivity.class.getSimpleName();
-
     private static final String RECIPE_KEY = "recipe_instance";
 
-    StepListFragment mStepListFragment;
+    private StepListFragment mStepListFragment;
     private Recipe mRecipe;
+
     // A single-pane display refers to phone screens, and two-pane to larger tablet screens
     private boolean mTwoPane;
 
@@ -31,10 +29,10 @@ public class RecipeStepsActivity extends AppCompatActivity implements StepListFr
         setContentView(R.layout.activity_recipe_steps);
 
         // Check if we are in two pane mode
-        mTwoPane = findViewById(R.id.steps_linear_layout) != null;
+        mTwoPane = getResources().getBoolean(R.bool.isTablet);
 
         // If the activity is started for the first time get the intent and
-        // add StepListFragment.
+        // add the StepListFragment.
         if (savedInstanceState == null) {
             if (getIntent() != null && getIntent().hasExtra("recipe")) {
                 Intent receivedIntent = getIntent();
@@ -50,6 +48,7 @@ public class RecipeStepsActivity extends AppCompatActivity implements StepListFr
                         .commit();
             }
         } else {
+            // After configuration change get the recipe from the savedInstanceState
             mRecipe = savedInstanceState.getParcelable(RECIPE_KEY);
         }
     }
@@ -58,16 +57,17 @@ public class RecipeStepsActivity extends AppCompatActivity implements StepListFr
     // Gets called, when a recipe step is clicked on in the StepListFragment.
     @Override
     public void onRecipeStepSelected(Step step) {
-        Log.d(TAG, "onRecipeStepSelected: " + step.getDescription());
-        StepDetailFragment stepDetailFragment = StepDetailFragment.newStepListFragmentInstance(step);
+        StepDetailFragment stepDetailFragment = StepDetailFragment.newStepDetailFragmentInstance(step);
 
         FragmentManager fragmentManager = getSupportFragmentManager();
 
         if (mTwoPane) {
+            // Add/Replace the StepDetailFragment to the right container of the MasterDetail layout
             fragmentManager.beginTransaction()
                     .replace(R.id.recipe_step_detail_container, stepDetailFragment)
                     .commit();
         } else {
+            // Replace the current RecipeListFragment with the StepDetailFragment
             fragmentManager.beginTransaction()
                     .setCustomAnimations(
                             R.anim.slide_in_right,
@@ -91,8 +91,9 @@ public class RecipeStepsActivity extends AppCompatActivity implements StepListFr
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_add_ingredients_to_widget) {
+            // Update the widget with the currently selected recipe's ingredient list
             BakingTimeWidgetService.updateWidget(this, mRecipe);
-            Toast.makeText(this, String.format("%s added to the widget", mRecipe.getName()), Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, String.format(getString(R.string.added_to_widget), mRecipe.getName()), Toast.LENGTH_SHORT).show();
             return true;
         } else
             return super.onOptionsItemSelected(item);

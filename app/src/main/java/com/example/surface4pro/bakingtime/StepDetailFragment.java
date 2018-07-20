@@ -1,11 +1,10 @@
 package com.example.surface4pro.bakingtime;
 
-
 import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,16 +24,18 @@ import com.google.android.exoplayer2.ui.PlayerView;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 
-
 /**
  * A simple {@link Fragment} subclass.
+ * This Fragment displays the detail of a single recipe step.
+ * Use the {@link StepDetailFragment#newStepDetailFragmentInstance} factory method to
+ * create an instance of this fragment.
  */
 public class StepDetailFragment extends Fragment {
 
     private static final String ARG_STEP = "step";
     private static final String POSITION_KEY = "position";
-    private Step mStep;
 
+    private Step mStep;
     private FragmentStepDetailBinding mBinding;
     private PlayerView mPlayerView;
     private SimpleExoPlayer player;
@@ -52,43 +53,45 @@ public class StepDetailFragment extends Fragment {
      * @param step A Step object that the Fragment should display.
      * @return A new instance of fragment StepDetailFragment.
      */
-    public static StepDetailFragment newStepListFragmentInstance(Step step) {
+    public static StepDetailFragment newStepDetailFragmentInstance(Step step) {
         StepDetailFragment stepDetailFragment = new StepDetailFragment();
+        // Bundle the passed in step to the Fragment
         Bundle args = new Bundle();
         args.putParcelable(ARG_STEP, step);
         stepDetailFragment.setArguments(args);
         return stepDetailFragment;
     }
 
-
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         mBinding = DataBindingUtil.inflate(
                 inflater, R.layout.fragment_step_detail, container, false);
 
+        // If the video position was saved after a configuration change, retrieve it now.
         if (savedInstanceState != null && savedInstanceState.containsKey(POSITION_KEY)) {
             mCurrentPosition = savedInstanceState.getLong(POSITION_KEY);
         }
 
+        // If the Fragment was created with arguments, retrieve them and set up the Fragment.
         if (getArguments() != null) {
             mStep = getArguments().getParcelable(ARG_STEP);
-            if (mBinding.stepDetailDescriptionTextView != null) {
+
+            if (mStep != null) {
                 mBinding.stepDetailDescriptionTextView.setText(mStep.getDescription());
-            }
 
-            if (mStep.getVideoURL().isEmpty() && !mStep.getThumbnailURL().isEmpty()) {
-
-                GlideApp.with(this)
-                        .load(mStep.getThumbnailURL())
-                        .diskCacheStrategy(DiskCacheStrategy.ALL)
-                        .placeholder(R.drawable.ic_cupcake)
-                        .into(mBinding.stepImageView);
-                mBinding.stepImageView.setVisibility(View.VISIBLE);
+                // If there is no video, but an image url, then load the image
+                if (mStep.getVideoURL().isEmpty() && !mStep.getThumbnailURL().isEmpty()) {
+                    GlideApp.with(this)
+                            .load(mStep.getThumbnailURL())
+                            .diskCacheStrategy(DiskCacheStrategy.ALL)
+                            .placeholder(R.drawable.ic_cupcake)
+                            .into(mBinding.stepImageView);
+                    mBinding.stepImageView.setVisibility(View.VISIBLE);
+                }
             }
             mPlayerView = mBinding.videoView;
-
         } else {
             // TODO add error message TextView
         }
@@ -111,8 +114,6 @@ public class StepDetailFragment extends Fragment {
 
             player.prepare(mediaSource);
 
-            Log.d("AAA", "initializePlayer: " + mCurrentPosition);
-
             if (mCurrentPosition != 0) {
                 player.seekTo(mCurrentPosition);
             }
@@ -122,6 +123,12 @@ public class StepDetailFragment extends Fragment {
         }
     }
 
+    /**
+     * This method builds a MediaSource from an URI
+     *
+     * @param uri URI that should be used to build the MediaSource
+     * @return The new MediaSource object
+     */
     private MediaSource buildMediaSource(Uri uri) {
         return new ExtractorMediaSource.Factory(
                 new DefaultHttpDataSourceFactory("BakingTime")).
@@ -134,7 +141,7 @@ public class StepDetailFragment extends Fragment {
         if (Util.SDK_INT > 23) {
             if (!mStep.getVideoURL().isEmpty()) {
                 initializePlayer();
-            } else {
+            } else { // In landscape view when there is no video set the text description visible
                 mBinding.instructionsScrollView.setVisibility(View.VISIBLE);
             }
         }
@@ -146,7 +153,7 @@ public class StepDetailFragment extends Fragment {
         if ((Util.SDK_INT <= 23 || player == null)) {
             if (!mStep.getVideoURL().isEmpty()) {
                 initializePlayer();
-            } else {
+            } else { // In landscape view when there is no video set the text description visible
                 mBinding.instructionsScrollView.setVisibility(View.VISIBLE);
             }
         }
@@ -176,7 +183,7 @@ public class StepDetailFragment extends Fragment {
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         if (player != null) {
             mCurrentPosition = player.getCurrentPosition();

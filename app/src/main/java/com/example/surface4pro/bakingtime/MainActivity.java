@@ -8,7 +8,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -27,14 +26,11 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements RecipeAdapter.RecipeAdapterOnClickHandler {
 
-    private static final String TAG = MainActivity.class.getSimpleName();
-
     private static final String JSON_REQUEST_ENDPOINT = "https://d17h27t6h515a5.cloudfront.net/topher/2017/May/59121517_baking/baking.json";
 
     private RequestQueue requestQueue;
     private Gson gson;
 
-    private RecyclerView mRecyclerView;
     private RecipeAdapter mAdapter;
     private ActivityMainBinding mBinding;
 
@@ -62,14 +58,16 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Rec
 
     /**
      * This method sets up and initializes the RecyclerView
+     *
+     * @param isTabletSize is the device a tablet or not?
      */
     private void setupRecyclerView(boolean isTabletSize) {
 
-        mRecyclerView = mBinding.recipesRecyclerView;
+        RecyclerView mRecyclerView = mBinding.recipesRecyclerView;
 
+        // Set GridLayout spanCount depending on screen size and orientation
         int orientation = this.getResources().getConfiguration().orientation;
         int spanCount;
-
         if (!isTabletSize && orientation == Configuration.ORIENTATION_PORTRAIT) {
             spanCount = 1;
         } else if (isTabletSize && orientation == Configuration.ORIENTATION_LANDSCAPE) {
@@ -104,7 +102,7 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Rec
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Log.d(TAG, "Recipe Response: " + error.toString());
+                        // TODO Show recipes could not be loaded TextView
                     }
                 });
 
@@ -114,6 +112,7 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Rec
 
     @Override
     public void onRecipeClicked(Recipe recipe) {
+        // Start the RecipeStepsActivity with the recipe that was clicked on
         Intent startRecipeStepsIntent = new Intent(this, RecipeStepsActivity.class);
         startRecipeStepsIntent.putExtra("recipe", recipe);
         startActivity(startRecipeStepsIntent);

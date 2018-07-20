@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="8dp"
-        android:text="No Recipe Selected"
+        android:text="@string/widget_no_recipe"
         android:textColor="#ffffff"
         android:textSize="22sp" />
 

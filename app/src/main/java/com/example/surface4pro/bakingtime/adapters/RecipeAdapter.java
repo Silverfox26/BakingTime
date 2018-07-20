@@ -16,15 +16,19 @@ import com.example.surface4pro.bakingtime.utilities.GlideApp;
 
 import java.util.List;
 
+/**
+ * Adapter class for a list of recipe objects
+ */
 public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeViewHolder> {
-    private Context mContext;
 
-    private static final String TAG = RecipeAdapter.class.getSimpleName();
-    // On-click handler to make it easy for an Activity to interface with the RecyclerView
-    private final RecipeAdapterOnClickHandler mClickHandler;
+    private final Context mContext;
+
     // Cached copy of Recipes
     private List<Recipe> mRecipeList;
     private LayoutInflater mLayoutInflater;
+
+    // On-click handler to make it easy for an Activity to interface with the RecyclerView
+    private final RecipeAdapterOnClickHandler mClickHandler;
 
     /**
      * Constructor for RecipeAdapter that accepts a List of Recipes to display and the specification
@@ -73,7 +77,9 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
     @Override
     public void onBindViewHolder(@NonNull RecipeViewHolder holder, final int position) {
         holder.binding.recipeNameTextView.setText(mRecipeList.get(position).getName());
-        holder.binding.recipeServingSizeTextView.setText("Servings: " + mRecipeList.get(position).getServings().toString());
+        holder.binding.recipeServingSizeTextView.setText(String.format(
+                mContext.getString(R.string.servings_count),
+                mRecipeList.get(position).getServings().toString()));
 
         // Load recipe image, if one is available
         String recipeImage = mRecipeList.get(position).getImage();
