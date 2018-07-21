@@ -22,6 +22,16 @@
                 android:layout_height="wrap_content"
                 android:visibility="gone" />
 
+            <TextView
+                android:id="@+id/video_error_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="16dp"
+                android:gravity="center"
+                android:text="@string/video_error_message"
+                android:visibility="gone" />
+
             <ImageView
                 android:id="@+id/step_image_view"
                 android:layout_width="match_parent"
@@ -46,5 +56,21 @@
                 android:layout_margin="16dp"
                 tools:text="Instructions" />
         </ScrollView>
+
+        <TextView
+            android:id="@+id/error_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginStart="16dp"
+            android:gravity="center"
+            android:text="@string/step_error_message"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
     </android.support.constraint.ConstraintLayout>
 </layout>

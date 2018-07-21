@@ -33,6 +33,7 @@ public class StepListFragment extends Fragment implements RecipeStepsAdapter.Rec
     private static final String RECIPE_KEY = "recipe_instance";
 
     private Recipe mRecipe;
+    FragmentStepListBinding mBinding;
 
     private OnRecipeStepClickListener mListener;
 
@@ -59,7 +60,7 @@ public class StepListFragment extends Fragment implements RecipeStepsAdapter.Rec
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        FragmentStepListBinding mBinding = DataBindingUtil.inflate(
+        mBinding = DataBindingUtil.inflate(
                 inflater, R.layout.fragment_step_list, container, false);
 
         // If the recipe was saved after a configuration change, retrieve it now.
@@ -71,6 +72,7 @@ public class StepListFragment extends Fragment implements RecipeStepsAdapter.Rec
         // If yes, setup the RecyclerView with the passed in data.
         // Else show error message.
         if (getArguments() != null) {
+            showSteps();
             mRecipe = getArguments().getParcelable(ARG_RECIPE);
 
             RecyclerView mRecyclerView = mBinding.recipeStepsRecyclerView;
@@ -83,7 +85,7 @@ public class StepListFragment extends Fragment implements RecipeStepsAdapter.Rec
             RecipeStepsAdapter mAdapter = new RecipeStepsAdapter(mRecipe, this);
             mRecyclerView.setAdapter(mAdapter);
         } else {
-            // TODO add error message TextView
+            showErrorMessage();
         }
 
         return mBinding.getRoot();
@@ -139,5 +141,15 @@ public class StepListFragment extends Fragment implements RecipeStepsAdapter.Rec
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putParcelable(RECIPE_KEY, mRecipe);
+    }
+
+    public void showSteps() {
+        mBinding.errorTextView.setVisibility(View.INVISIBLE);
+        mBinding.recipeStepsRecyclerView.setVisibility(View.VISIBLE);
+    }
+
+    public void showErrorMessage() {
+        mBinding.errorTextView.setVisibility(View.VISIBLE);
+        mBinding.recipeStepsRecyclerView.setVisibility(View.INVISIBLE);
     }
 }

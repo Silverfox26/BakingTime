@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -19,14 +20,14 @@ import com.example.surface4pro.bakingtime.adapters.RecipeAdapter;
 import com.example.surface4pro.bakingtime.data.Recipe;
 import com.example.surface4pro.bakingtime.databinding.ActivityMainBinding;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements RecipeAdapter.RecipeAdapterOnClickHandler {
 
     private static final String JSON_REQUEST_ENDPOINT = "https://d17h27t6h515a5.cloudfront.net/topher/2017/May/59121517_baking/baking.json";
+    private static final String RECIPES_KEY = "recipes_instance";
 
     private RequestQueue requestQueue;
     private Gson gson;
@@ -34,7 +35,7 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Rec
     private RecipeAdapter mAdapter;
     private ActivityMainBinding mBinding;
 
-    private List<Recipe> recipes = new ArrayList<>();
+    private ArrayList<Recipe> recipes = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,18 +43,21 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Rec
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
 
         boolean isTabletSize = getResources().getBoolean(R.bool.isTablet);
-
-        // Instantiate new RequestQueue that will handle running the network request in a background thread
-        requestQueue = Volley.newRequestQueue(this);
-
-        // Instantiate new Gson instance
-        gson = new Gson();
-
         setupRecyclerView(isTabletSize);
 
-        // Fetch the Recipes from the Server
-        fetchRecipes();
+        if (savedInstanceState == null) {
+            // Instantiate new RequestQueue that will handle running the network request in a background thread
+            requestQueue = Volley.newRequestQueue(this);
 
+            // Instantiate new Gson instance
+            gson = new Gson();
+
+            // Fetch the Recipes from the Server
+            fetchRecipes();
+        } else {
+            recipes = savedInstanceState.getParcelableArrayList(RECIPES_KEY);
+            mAdapter.setRecipeData(recipes);
+        }
     }
 
     /**
@@ -80,6 +84,7 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Rec
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mAdapter = new RecipeAdapter(this, recipes, this);
         mRecyclerView.setAdapter(mAdapter);
+        showRecipes();
     }
 
     /**
@@ -93,16 +98,17 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Rec
                     public void onResponse(String response) {
                         // Deserialize the JSON response into a List of Recipe objects
                         // and set the recipe List to the Adapter.
-                        recipes = Arrays.asList(gson.fromJson(response, Recipe[].class));
+                        recipes = gson.fromJson(response, new TypeToken<ArrayList<Recipe>>() {
+                        }.getType());
                         mAdapter.setRecipeData(recipes);
-
+                        showRecipes();
                     }
                 },
                 // Listener for if the StringRequest returns an error.
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        // TODO Show recipes could not be loaded TextView
+                        showErrorMessage();
                     }
                 });
 
@@ -116,5 +122,21 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Rec
         Intent startRecipeStepsIntent = new Intent(this, RecipeStepsActivity.class);
         startRecipeStepsIntent.putExtra("recipe", recipe);
         startActivity(startRecipeStepsIntent);
+    }
+
+    public void showRecipes() {
+        mBinding.errorTextView.setVisibility(View.INVISIBLE);
+        mBinding.recipesRecyclerView.setVisibility(View.VISIBLE);
+    }
+
+    public void showErrorMessage() {
+        mBinding.errorTextView.setVisibility(View.VISIBLE);
+        mBinding.recipesRecyclerView.setVisibility(View.INVISIBLE);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelableArrayList(RECIPES_KEY, recipes);
     }
 }

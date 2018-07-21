@@ -1,10 +1,13 @@
 <resources>
     <string name="app_name">Baking Time</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="added_to_widget">%s added to the widget</string>
     <string name="servings_count">Servings: %s</string>
     <string name="menu_show_in_widget">Show In Widget</string>
     <string name="widget_no_recipe">No Recipe Selected</string>
-    <string name="ingredients_heading">Inredients</string>
+    <string name="ingredients_heading">Ingredients</string>
+    <string name="recipes_error_message">Oops! Recipes could not be loaded.\nPlease check your internet connection and try again.</string>
+    <string name="step_list_error_message">Oops! Recipe could not be loaded.\nPlease check your internet connection and try again.</string>
+    <string name="step_error_message">Oops! Recipe step could not be loaded.\nPlease check your internet connection and try again.</string>
+    <string name="video_error_message">Video could not be loaded.\nPlease check your internet connection and try again.</string>
 </resources>

@@ -13,6 +13,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.surface4pro.bakingtime.data.Step;
 import com.example.surface4pro.bakingtime.databinding.FragmentStepDetailBinding;
 import com.example.surface4pro.bakingtime.utilities.GlideApp;
+import com.example.surface4pro.bakingtime.utilities.NetworkStatus;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.DefaultRenderersFactory;
 import com.google.android.exoplayer2.ExoPlayerFactory;
@@ -92,8 +93,9 @@ public class StepDetailFragment extends Fragment {
                 }
             }
             mPlayerView = mBinding.videoView;
+            showStep();
         } else {
-            // TODO add error message TextView
+            showErrorMessage();
         }
 
         return mBinding.getRoot();
@@ -140,7 +142,11 @@ public class StepDetailFragment extends Fragment {
         super.onStart();
         if (Util.SDK_INT > 23) {
             if (!mStep.getVideoURL().isEmpty()) {
-                initializePlayer();
+                if (NetworkStatus.isOnline(getContext())) {
+                    initializePlayer();
+                } else {
+                    mBinding.videoErrorTextView.setVisibility(View.VISIBLE);
+                }
             } else { // In landscape view when there is no video set the text description visible
                 mBinding.instructionsScrollView.setVisibility(View.VISIBLE);
             }
@@ -152,7 +158,11 @@ public class StepDetailFragment extends Fragment {
         super.onResume();
         if ((Util.SDK_INT <= 23 || player == null)) {
             if (!mStep.getVideoURL().isEmpty()) {
-                initializePlayer();
+                if (NetworkStatus.isOnline(getContext())) {
+                    initializePlayer();
+                } else {
+                    mBinding.videoErrorTextView.setVisibility(View.VISIBLE);
+                }
             } else { // In landscape view when there is no video set the text description visible
                 mBinding.instructionsScrollView.setVisibility(View.VISIBLE);
             }
@@ -189,5 +199,16 @@ public class StepDetailFragment extends Fragment {
             mCurrentPosition = player.getCurrentPosition();
             outState.putLong(POSITION_KEY, mCurrentPosition);
         }
+    }
+
+    public void showStep() {
+        mBinding.errorTextView.setVisibility(View.INVISIBLE);
+        mBinding.instructionsScrollView.setVisibility(View.VISIBLE);
+    }
+
+    public void showErrorMessage() {
+        mBinding.errorTextView.setVisibility(View.VISIBLE);
+        mBinding.videoView.setVisibility(View.INVISIBLE);
+        mBinding.instructionsScrollView.setVisibility(View.INVISIBLE);
     }
 }
