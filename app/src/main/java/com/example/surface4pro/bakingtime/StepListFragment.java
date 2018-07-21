@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -75,6 +76,10 @@ public class StepListFragment extends Fragment implements RecipeStepsAdapter.Rec
             RecyclerView mRecyclerView = mBinding.recipeStepsRecyclerView;
             mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
             mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+
+            DividerItemDecoration itemDecor = new DividerItemDecoration(mRecyclerView.getContext(), LinearLayoutManager.VERTICAL);
+            mRecyclerView.addItemDecoration(itemDecor);
+
             RecipeStepsAdapter mAdapter = new RecipeStepsAdapter(mRecipe, this);
             mRecyclerView.setAdapter(mAdapter);
         } else {

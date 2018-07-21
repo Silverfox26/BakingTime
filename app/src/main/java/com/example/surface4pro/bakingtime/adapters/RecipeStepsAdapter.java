@@ -146,6 +146,7 @@ public class RecipeStepsAdapter extends RecyclerView.Adapter<RecipeStepsAdapter.
             // If the view type of the layout is recipe step, set recipe step data
             case VIEW_TYPE_RECIPE_STEP:
                 if (holder.binding != null) {
+                    holder.binding.stepNumberTextView.setText(String.format("%s.", String.valueOf(position)));
                     holder.binding.recipeStepTextView.setText(mRecipe.getSteps().get(position - 1).getShortDescription());
                 }
                 break;
