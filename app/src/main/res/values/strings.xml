@@ -10,4 +10,7 @@
     <string name="step_list_error_message">Oops! Recipe could not be loaded.\nPlease check your internet connection and try again.</string>
     <string name="step_error_message">Oops! Recipe step could not be loaded.\nPlease check your internet connection and try again.</string>
     <string name="video_error_message">Video could not be loaded.\nPlease check your internet connection and try again.</string>
+    <string name="recipe_image">Recipe image</string>
+    <string name="right_arrow">Right arrow</string>
+    <string name="recipe_step_illustration">Recipe step illustration</string>
 </resources>

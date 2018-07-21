@@ -33,7 +33,7 @@ public class StepListFragment extends Fragment implements RecipeStepsAdapter.Rec
     private static final String RECIPE_KEY = "recipe_instance";
 
     private Recipe mRecipe;
-    FragmentStepListBinding mBinding;
+    private FragmentStepListBinding mBinding;
 
     private OnRecipeStepClickListener mListener;
 
@@ -143,12 +143,12 @@ public class StepListFragment extends Fragment implements RecipeStepsAdapter.Rec
         outState.putParcelable(RECIPE_KEY, mRecipe);
     }
 
-    public void showSteps() {
+    private void showSteps() {
         mBinding.errorTextView.setVisibility(View.INVISIBLE);
         mBinding.recipeStepsRecyclerView.setVisibility(View.VISIBLE);
     }
 
-    public void showErrorMessage() {
+    private void showErrorMessage() {
         mBinding.errorTextView.setVisibility(View.VISIBLE);
         mBinding.recipeStepsRecyclerView.setVisibility(View.INVISIBLE);
     }

@@ -18,7 +18,6 @@ public class RecipeStepsActivity extends AppCompatActivity implements StepListFr
 
     private static final String RECIPE_KEY = "recipe_instance";
 
-    private StepListFragment mStepListFragment;
     private Recipe mRecipe;
 
     // A single-pane display refers to phone screens, and two-pane to larger tablet screens
@@ -48,7 +47,7 @@ public class RecipeStepsActivity extends AppCompatActivity implements StepListFr
                 mRecipe = receivedIntent.getParcelableExtra("recipe");
 
                 // Create a new StepListFragment instance
-                mStepListFragment = StepListFragment.newStepListFragmentInstance(mRecipe);
+                StepListFragment mStepListFragment = StepListFragment.newStepListFragmentInstance(mRecipe);
 
                 // Use a FragmentManager and transaction to add the fragment to the screen
                 FragmentManager fragmentManager = getSupportFragmentManager();
@@ -61,7 +60,9 @@ public class RecipeStepsActivity extends AppCompatActivity implements StepListFr
             mRecipe = savedInstanceState.getParcelable(RECIPE_KEY);
         }
 
-        setTitle(mRecipe.getName());
+        if (mRecipe != null) {
+            setTitle(mRecipe.getName());
+        }
     }
 
     // Callback method of the StepListFragment.

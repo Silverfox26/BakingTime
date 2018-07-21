@@ -124,12 +124,12 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Rec
         startActivity(startRecipeStepsIntent);
     }
 
-    public void showRecipes() {
+    private void showRecipes() {
         mBinding.errorTextView.setVisibility(View.INVISIBLE);
         mBinding.recipesRecyclerView.setVisibility(View.VISIBLE);
     }
 
-    public void showErrorMessage() {
+    private void showErrorMessage() {
         mBinding.errorTextView.setVisibility(View.VISIBLE);
         mBinding.recipesRecyclerView.setVisibility(View.INVISIBLE);
     }

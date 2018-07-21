@@ -37,6 +37,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:adjustViewBounds="true"
+                android:contentDescription="@string/recipe_step_illustration"
                 android:visibility="gone" />
         </FrameLayout>
 

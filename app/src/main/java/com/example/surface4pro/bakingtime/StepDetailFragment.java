@@ -201,12 +201,12 @@ public class StepDetailFragment extends Fragment {
         }
     }
 
-    public void showStep() {
+    private void showStep() {
         mBinding.errorTextView.setVisibility(View.INVISIBLE);
         mBinding.instructionsScrollView.setVisibility(View.VISIBLE);
     }
 
-    public void showErrorMessage() {
+    private void showErrorMessage() {
         mBinding.errorTextView.setVisibility(View.VISIBLE);
         mBinding.videoView.setVisibility(View.INVISIBLE);
         mBinding.instructionsScrollView.setVisibility(View.INVISIBLE);
