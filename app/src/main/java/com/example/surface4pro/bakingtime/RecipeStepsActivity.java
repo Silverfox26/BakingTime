@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -28,6 +29,14 @@ public class RecipeStepsActivity extends AppCompatActivity implements StepListFr
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_steps);
 
+        // Get a support ActionBar corresponding to this toolbar
+        ActionBar ab = getSupportActionBar();
+
+        // Enable the Up button
+        if (ab != null) {
+            ab.setDisplayHomeAsUpEnabled(true);
+        }
+
         // Check if we are in two pane mode
         mTwoPane = getResources().getBoolean(R.bool.isTablet);
 
@@ -51,6 +60,8 @@ public class RecipeStepsActivity extends AppCompatActivity implements StepListFr
             // After configuration change get the recipe from the savedInstanceState
             mRecipe = savedInstanceState.getParcelable(RECIPE_KEY);
         }
+
+        setTitle(mRecipe.getName());
     }
 
     // Callback method of the StepListFragment.
@@ -103,5 +114,16 @@ public class RecipeStepsActivity extends AppCompatActivity implements StepListFr
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putParcelable(RECIPE_KEY, mRecipe);
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        int count = getSupportFragmentManager().getBackStackEntryCount();
+        if (count == 0) {
+            super.onSupportNavigateUp();
+        } else {
+            getSupportFragmentManager().popBackStack();
+        }
+        return true;
     }
 }
