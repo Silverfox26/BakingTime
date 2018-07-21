@@ -4,7 +4,7 @@
     android:initialLayout="@layout/baking_time_widget"
     android:minHeight="120dp"
     android:minWidth="120dp"
-    android:previewImage="@drawable/example_appwidget_preview"
+    android:previewImage="@drawable/app_widget_preview"
     android:resizeMode="horizontal|vertical"
     android:updatePeriodMillis="86400000"
     android:widgetCategory="home_screen" />
